@@ -8,10 +8,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float _speed;
 
     private CharacterController _characterController;
+    private string _horizontalAxis;
+    private string _verticalAxis;
 
     private void Awake()
     {
         _characterController = GetComponent<CharacterController>();
+        _horizontalAxis = "Horizontal";
+        _verticalAxis = "Vertical";
     }
 
     private void Update()
@@ -21,27 +25,20 @@ public class PlayerController : MonoBehaviour
 
     private void Move()
     {
-        if (_characterController != null)
+        float axisX = Input.GetAxis(_horizontalAxis);
+        float axisY = 0;
+        float axisZ = Input.GetAxis(_verticalAxis);
+
+        Vector3 playerSpeed = new Vector3(axisX, axisY, axisZ);
+        playerSpeed *= Time.deltaTime * _speed;
+
+        if (_characterController.isGrounded)
         {
-            float axisX = Input.GetAxis("Horizontal");
-            float axisY = 0;
-            float axisZ = Input.GetAxis("Vertical");
-
-            Vector3 playerSpeed = new Vector3(axisX, axisY, axisZ);
-            playerSpeed *= Time.deltaTime * _speed;
-
-            if (_characterController.isGrounded)
-            {
-                _characterController.Move(playerSpeed + Vector3.down);
-            }
-            else
-            {
-                _characterController.Move(_characterController.velocity + Vector3.down * Time.deltaTime);
-            }
+            _characterController.Move(playerSpeed + Physics.gravity);
         }
         else
         {
-            throw new ArgumentNullException(nameof(_characterController));
+            _characterController.Move(_characterController.velocity + Physics.gravity * Time.deltaTime);
         }
     }
 }

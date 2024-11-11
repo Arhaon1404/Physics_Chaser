@@ -25,18 +25,11 @@ public class EnemyController : MonoBehaviour
 
     private void Move()
     {
-        if (_rigidbody != null)
-        {
-            Vector3 target = _target.transform.position;
+        Vector3 target = _target.transform.position;
 
-            if (IsTargetReached() != true)
-            {
-                _rigidbody.position = Vector3.MoveTowards(_transform.position, target, _speed * Time.deltaTime);
-            }
-        }
-        else
+        if (IsTargetReached() != true)
         {
-            throw new ArgumentNullException(nameof(_rigidbody));
+            _rigidbody.position = Vector3.MoveTowards(_transform.position, target, _speed * Time.deltaTime);
         }
     }
 
